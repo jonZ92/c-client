@@ -206,6 +206,7 @@ int main()
 
 	//启动线程
 	std::thread tl(cmdThread, _sock);
+	//输入函数线程与主线程分离
 	tl.detach();
 	while (g_bRun)
 	{
