@@ -6,6 +6,7 @@
 #include<Windows.h>
 #include<WinSock2.h>
 #include<iostream>
+#include<thread>
 #pragma comment(lib,"ws2_32.lib")
 
 
@@ -87,6 +88,46 @@ struct DataPackage
 	char name[32];
 };
 
+bool g_bRun = true;
+
+
+
+//多线程输入命令
+void cmdThread(SOCKET soc) {
+
+	while (true) {
+		char cmdBuf[256] = {};
+		scanf("%s", cmdBuf);
+		if (0 == strcmp(cmdBuf, "exit")) {
+			g_bRun = false;
+			printf("退出\n");
+			break;
+		}
+
+		else if (0 == strcmp(cmdBuf, "login")) {
+			Login login_s;
+			strcpy(login_s.userName, "jon");
+			strcpy(login_s.password, "jt");
+			send(soc, (char*)&login_s, sizeof(Login), 0);
+		}
+
+		else if (0 == strcmp(cmdBuf, "loginout")) {
+
+			Loginout lo;
+			strcpy(lo.userName, "snow");
+			send(soc, (char*)&lo, sizeof(Loginout), 0);
+
+		}
+		else {
+			printf("不支持的命令\n");
+
+		}
+
+	}
+	
+	
+
+}
 
 
 int processs(SOCKET _clientSock) {
@@ -163,17 +204,20 @@ int main()
 		printf("连接sockett成功。 \n");
 	}
 
-
-	while (true)
+	//启动线程
+	std::thread tl(cmdThread, _sock);
+	tl.detach();
+	while (g_bRun)
 	{
 		fd_set fdReads;
 		FD_ZERO(&fdReads);
 		FD_SET(_sock, &fdReads);
-		timeval t_s = {0,0};
-		int ret=select(_sock, &fdReads,NULL,NULL,&t_s);
+		timeval t_s = {1,0};
+		int ret=select(_sock, &fdReads,0,0,&t_s);
 		
-		if (ret==0) {
+		if (ret<0) {
 			printf("select 任务结束 \n");
+			break;
 		}
 
 		if (FD_ISSET(_sock, &fdReads)) {
@@ -186,11 +230,8 @@ int main()
 		}
 	
 
-		printf("空闲时间处理其他业务\n");
-		Login login_s;
-		strcpy(login_s.userName,"jon");
-		strcpy(login_s.password,"jt");
-		send(_sock,(char*)&login_s,sizeof(Login),0);
+		//printf("空闲时间处理其他业务\n");
+	
 		//Sleep(1000);
 	   
 
