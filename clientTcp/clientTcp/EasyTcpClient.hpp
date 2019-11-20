@@ -1,7 +1,7 @@
 
 
 
-#ifndef EasyTcpClient_hpp_
+#ifndef  EasyTcpClient_hpp_
 #define EasyTcpClient_hpp_
 #ifdef _WIN32	
 #include<Windows.h>
@@ -12,7 +12,7 @@
 #include<string.h>
 #define SOCKET int
 #define INVALID_SOCKET (SOCKET)(~0)
-#define SOCKET_ERROR           (-1) 
+#define SOCKET_ERROR                  (-1) 
 #endif
 #include<iostream>
 #include"MessageHeader.hpp"
@@ -68,7 +68,6 @@ public:
 			printf("socket初始化。 \n");
 			initSocket();
 		}
-
 		sockaddr_in _sin = {};
 		_sin.sin_family = AF_INET;
 		_sin.sin_port = htons(port);
@@ -88,7 +87,6 @@ public:
 		return ret;
 	}
 
-
 	//关闭服务器
 	void CloseService() 
 	{
@@ -100,9 +98,7 @@ public:
 				close(_socket);
 #endif
 		}
-
 	}
-
 	//接收数据
 	//发送数据
 	//处理数据
@@ -178,7 +174,6 @@ public:
 								break;
 		}
 	}
-
 	int SendData(dataHead *header) {
 
 		if (isRun()&& header) {
