@@ -1,15 +1,12 @@
 
 
 
-#define WIN32_LEAN_AND_MEAN
-#define _WINSOCK_DEPRECATED_NO_WARNINGS 
+
 #include<iostream>
 #include<thread>
 #include"EasyTcpClient.hpp"
-#pragma comment(lib,"ws2_32.lib")
+//全局变量初始化
 bool g_bRun = true;
-
-
 
 //多线程输入命令
 void cmdThread(EasyTcpClient *clients) {
@@ -28,21 +25,16 @@ void cmdThread(EasyTcpClient *clients) {
 			strcpy(login_s.password, "jt");
 			clients->SendData(&login_s);
 		}
-
 		else if (0 == strcmp(cmdBuf, "loginout")) {
 			Loginout lo;
 			strcpy(lo.userName, "snow");
 			clients->SendData(&lo);
-
 		}
 		else {
 			printf("不支持的命令\n");
-
 		}
 
 	}
-	
-	
 
 }
 
@@ -50,17 +42,24 @@ void cmdThread(EasyTcpClient *clients) {
 int main()
 {
 	EasyTcpClient client_s;
-	client_s.initSocket();
+	//client_s.initSocket();
 	client_s.connectService("127.0.0.1", 7000);
+
+	//EasyTcpClient client_s2;
+	//client_s2.connectService("127.0.0.1", 7000);
 	//启动线程
-	std::thread tl(cmdThread, &client_s);
+	
+	std::thread t1(cmdThread, &client_s);
 	//输入函数线程与主线程分离
-	tl.detach();
+	t1.detach();
+	//std::thread t2(cmdThread, &client_s2);
+	
+	//	t2.detach();
 	while (client_s.isRun()) {
 		client_s.onRun();
 	}
 	client_s.CloseService();
+	printf("已退出/n");
 	getchar();
-
 	return 0;
 }

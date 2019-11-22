@@ -4,36 +4,36 @@
 #ifndef  EasyTcpClient_hpp_
 #define EasyTcpClient_hpp_
 #ifdef _WIN32	
-#include<Windows.h>
-#include<WinSock2.h>
+			#define WIN32_LEAN_AND_MEAN
+			#define _WINSOCK_DEPRECATED_NO_WARNINGS 
+			#pragma comment(lib,"ws2_32.lib")
+			#include<Windows.h>
+			#include<WinSock2.h>
 #else
-#include<unistd.h>
-#include<arpa/inet.h>
-#include<string.h>
-#define SOCKET int
-#define INVALID_SOCKET (SOCKET)(~0)
-#define SOCKET_ERROR                  (-1) 
+			#include<unistd.h>
+			#include<arpa/inet.h>
+			#include<string.h>
+			#define SOCKET int
+			#define INVALID_SOCKET (SOCKET)(~0)
+			#define SOCKET_ERROR                  (-1) 
 #endif
 #include<iostream>
 #include"MessageHeader.hpp"
-const int post_id = 7000;
+
+
 class EasyTcpClient
 {
+private:
 	SOCKET _socket;
 public:
-
-
 	EasyTcpClient() 
 	{
 		_socket = INVALID_SOCKET;
-	
 	}
 	//虚析构函数
 	virtual ~EasyTcpClient() 
 	{
-
 		CloseService();
-
 	}
 	//初始化socket
 	void initSocket() 
@@ -86,7 +86,6 @@ public:
 		}
 		return ret;
 	}
-
 	//关闭服务器
 	void CloseService() 
 	{
@@ -102,9 +101,7 @@ public:
 	//接收数据
 	//发送数据
 	//处理数据
-
-	bool onRun() {
-		
+	bool onRun() {	
 		if (isRun()) {
 			fd_set fdReads;
 			FD_ZERO(&fdReads);
@@ -116,7 +113,6 @@ public:
 				printf("select 任务结束 \n");
 				return false;
 			}
-
 			if (FD_ISSET(_socket, &fdReads)) {
 				FD_CLR(_socket, &fdReads);
 
@@ -135,8 +131,6 @@ public:
 	bool isRun() {
 		return _socket!= INVALID_SOCKET;
 	}
-
-
 	int RecvData(SOCKET _clientSock) {
 		// 5 接收客户端数据请求
 		//字节缓冲区
@@ -181,7 +175,5 @@ public:
 		}
 		return SOCKET_ERROR;
 	}
-private:
-
 };
 #endif
