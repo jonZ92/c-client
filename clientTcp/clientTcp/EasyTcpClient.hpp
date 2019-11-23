@@ -1,6 +1,3 @@
-
-
-
 #ifndef  EasyTcpClient_hpp_
 #define EasyTcpClient_hpp_
 #ifdef _WIN32	
@@ -19,7 +16,6 @@
 #endif
 #include<iostream>
 #include"MessageHeader.hpp"
-
 
 class EasyTcpClient
 {
@@ -59,7 +55,6 @@ public:
 		else {
 			printf("建立socket成功。 \n");
 		}
-	
 	}
 	//连接服务器
 	int connectService(const char* ip,unsigned short port)
@@ -111,6 +106,7 @@ public:
 
 			if (ret < 0) {
 				printf("select 任务结束 \n");
+				CloseService();
 				return false;
 			}
 			if (FD_ISSET(_socket, &fdReads)) {
@@ -118,6 +114,7 @@ public:
 
 				if (-1 == RecvData(_socket)) {
 					printf("select任务结束 \n");
+					CloseService();
 					return false;
 				}
 			}

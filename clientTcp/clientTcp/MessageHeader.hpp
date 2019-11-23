@@ -1,5 +1,5 @@
-#ifndef MessageHeader_hpp_
-#define MessageHeader_hpp_
+#ifndef _MessageHeader_hpp_
+#define _MessageHeader_hpp_
 
 enum CMD {
 	CMD_LOGIN,
@@ -74,3 +74,4 @@ struct DataPackage
 	int age;
 	char name[32];
 };
+#endif
